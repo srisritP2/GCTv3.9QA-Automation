@@ -1,0 +1,15 @@
+Start of Program
+Before navigating to: 'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Navigated to:'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign In']
+Found Element By : By.xpath: //span[normalize-space()='Sign In']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (993537f82ece9b38c32e0039ad6a6a11)] -> xpath: //span[normalize-space()='Sign In']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (993537f82ece9b38c32e0039ad6a6a11)] -> xpath: //span[normalize-space()='Sign In']]
+Trying to find Element By : By.xpath: //i[@class='dx-icon mat-icons mi-arrow_drop_down']
+Before navigating to: 'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Navigated to:'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign In']
+Found Element By : By.xpath: //span[normalize-space()='Sign In']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (1609a7d5d23127bd02c6fd2a64c9bc13)] -> xpath: //span[normalize-space()='Sign In']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (1609a7d5d23127bd02c6fd2a64c9bc13)] -> xpath: //span[normalize-space()='Sign In']]
+Trying to find Element By : By.xpath: //span[normalize-space()='Ticket Search']

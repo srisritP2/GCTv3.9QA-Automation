@@ -1,0 +1,40 @@
+Start of Program
+Before navigating to: 'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Navigated to:'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign In']
+Found Element By : By.xpath: //span[normalize-space()='Sign In']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (993537f82ece9b38c32e0039ad6a6a11)] -> xpath: //span[normalize-space()='Sign In']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (993537f82ece9b38c32e0039ad6a6a11)] -> xpath: //span[normalize-space()='Sign In']]
+Trying to find Element By : By.xpath: //i[@class='dx-icon mat-icons mi-arrow_drop_down']Start of Program
+Before navigating to: 'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Navigated to:'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign In']
+Found Element By : By.xpath: //span[normalize-space()='Sign In']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (c83156fbc8af370a05140038515474d3)] -> xpath: //span[normalize-space()='Sign In']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (c83156fbc8af370a05140038515474d3)] -> xpath: //span[normalize-space()='Sign In']]
+Trying to find Element By : By.xpath: (//div[@class='dx-button-content'])[3]
+Found Element By : By.xpath: (//div[@class='dx-button-content'])[3]
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (c83156fbc8af370a05140038515474d3)] -> xpath: (//div[@class='dx-button-content'])[3]]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (c83156fbc8af370a05140038515474d3)] -> xpath: (//div[@class='dx-button-content'])[3]]
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign Out']Start of Program
+Before navigating to: 'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Navigated to:'https://geocalltest.progressivepartnering.com/ui/dashboard'
+Trying to find Element By : By.xpath: //span[normalize-space()='Sign In']
+Found Element By : By.xpath: //span[normalize-space()='Sign In']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: //span[normalize-space()='Sign In']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: //span[normalize-space()='Sign In']]
+Trying to find Element By : By.xpath: //input[@name='username']
+Found Element By : By.xpath: //input[@name='username']
+Trying to find Element By : By.xpath: //input[@name='password']
+Found Element By : By.xpath: //input[@name='password']
+Trying to find Element By : By.xpath: (//span[@class='dx-checkbox-icon'])[1]
+Found Element By : By.xpath: (//span[@class='dx-checkbox-icon'])[1]
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: (//span[@class='dx-checkbox-icon'])[1]]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: (//span[@class='dx-checkbox-icon'])[1]]
+Trying to find Element By : By.xpath: //span[normalize-space()='Login']
+Found Element By : By.xpath: //span[normalize-space()='Login']
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: //span[normalize-space()='Login']]
+Clicked on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: //span[normalize-space()='Login']]
+Trying to find Element By : By.xpath: (//div[@class='dx-button-content'])[3]
+Found Element By : By.xpath: (//div[@class='dx-button-content'])[3]
+Trying to click on: [[ChromeDriver: chrome on WINDOWS (32f5c9bcd9343a05eaf1292b40bb0935)] -> xpath: (//div[@class='dx-button-content'])[3]]

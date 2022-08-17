@@ -1,0 +1,1 @@
+Validate GCT application Login and Logout ----> Fri Aug 12 17:45:22 IST 2022 WARNING https://geocalltest.progressivepartnering.com/ui/main.7b59ef54692f54f0.js 0:174039 "W0017 - Setting the \"maxHeight\" property with a function is deprecated since v21.2. See:\nhttp://js.devexpress.com/error/21_2/W0017"
