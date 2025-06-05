@@ -1,0 +1,35 @@
+name: Publish Cucumber HTML Reports
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  publish-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build and run tests
+        run: mvn test
+
+      - name: Copy report to date-stamped folder
+        run: |
+          REPORT_DATE=$(date +'%Y-%m-%d')
+          mkdir -p reports/$REPORT_DATE
+          cp -r target/generated-report/* reports/$REPORT_DATE/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
+          publish_branch: gh-pages
