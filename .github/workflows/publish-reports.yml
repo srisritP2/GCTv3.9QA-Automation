@@ -21,6 +21,11 @@ jobs:
       - name: Build and run tests
         run: mvn test
 
+      - name: List target directory contents for debugging
+        run: |
+          echo "Listing target directory after mvn test:"
+          ls -R target
+
       - name: Copy report to date-stamped folder
         run: |
           REPORT_DATE=$(date +'%Y-%m-%d')
