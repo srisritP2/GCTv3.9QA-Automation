@@ -1,26 +1,19 @@
 package com.qa.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 import org.openqa.selenium.JavascriptExecutor;
 
 import com.qa.base.TestBase;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-// TestUtil is extends TestBase (web drivers) also handles the time out scenario and screenshot taking when page is stuck
+// TestUtil is extends TestBase (web drivers) also handles the time-out scenario and screenshot taking when page is stuck
 
 public class TestUtil extends TestBase {
 
@@ -28,11 +21,10 @@ public class TestUtil extends TestBase {
 	public static long IMPLICIT_WAIT = 30;
 
 	static JavascriptExecutor js;
-
-	public void switchToFrame() {
-		driver.switchTo().frame("mainpanel");
-	}
-
+// Commented Switch to Main-panel since no usage at this moment
+//	public void switchToFrame() {
+//		driver.switchTo().frame("mainpanel");
+//	}
 //	public static Object[][] getTestData(String sheetName) {
 	public static void takeScreenshotAtEndOfTest() throws IOException {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);

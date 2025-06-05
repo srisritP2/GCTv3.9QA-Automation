@@ -32,12 +32,10 @@ Feature: GeoCallTest Application Smoke Testing Automation Suite
 ####################################  Validating the test scenarios on ***  SignIn page  *** ####################################
 
     # Login and log out of the application
+  @LoginLogout
   Scenario: Validate GCT application Login and Logout
     Given GCT application URL to launch
-    When user redirects to sign in Page
-    Then user enters the username as "admin"
-    And user enters the password as "P2GcTest!2"
-    And user click on sign in button
+    Then User Login to the application
     Then User logout
 
 
@@ -45,11 +43,8 @@ Feature: GeoCallTest Application Smoke Testing Automation Suite
 
   # Validating test cases on Ticket Search flow
   Scenario: Validate the Ticket Search Functionality
-    Given User on Ticket Advanced Search Page
-    When user redirects to sign in Page
-    Then user enters the username as "admin"
-    And user enters the password as "P2GcTest!2"
-    Then user click on sign in button
+    Given GCT application URL to launch
+    Then User Login to the application
     Then Go to the Menu and click on ticket search
     Then Check whether ticket search is visible or not
     Then Click on ticket search and enter ticket number as "20222230002"

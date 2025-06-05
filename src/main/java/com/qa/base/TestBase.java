@@ -1,139 +1,284 @@
 package com.qa.base;
 
-import com.qa.util.TestUtil;
-import com.qa.util.WebEventListener;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+// Import required dependencies
+import com.qa.util.CustomWebDriverListener;
+import org.openqa.selenium.*; // Importing Selenium WebDriver
+import org.openqa.selenium.chrome.*;
+import org.openqa.selenium.edge.*;
+import org.openqa.selenium.firefox.*;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.*; // For capturing browser logs
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.ui.*; // For explicit waits
 
-import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
+import java.awt.*; // For Robot class (keyboard and mouse events)
+import java.awt.event.KeyEvent;
+import java.io.*; // File handling (logs, config files)
+import java.time.Duration; // New Selenium 4 time management
+import java.util.*; // For Maps and Properties
+import java.util.function.Function;
+import java.util.logging.Level;
 
 /**
- * Test Base file is for Driver methods maintenance such are web driver of chrome, firefox, safari
- * Initiation method
- * browser logs method
- * console logs method
- * browser quit method
- **/
+ * - TestBase class: Manages WebDriver initialization, browser settings, logging, and utilities.
+ * - Loads browser properties
+ * - Sets up WebDriver based on config file
+ * - Manages browser alerts, scrolling, and logging
+ * - Closes browser after execution
+ */
 public class TestBase {
-	
-	public static WebDriver driver;
-	public static Properties prop;
-	public  static EventFiringWebDriver e_driver;
-	public static WebEventListener eventListener;
+    public static final By yesButton = By.xpath("//span[contains(text(),'Yes')]");
 
-		public TestBase(){
-		try {
-			prop = new Properties();
-			FileInputStream ip = new FileInputStream(System.getProperty("user.dir")+ "/src/test/resources/config/config.properties");
-			prop.load(ip);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    //  Global WebDriver instance (used across all test cases)
+    public static WebDriver driver;
 
-		}
-	/** This Method is used to setup browser along with event listner  for every browser action
-	 * with implict wait
-	 * Just we must Edit the browser name in config.properties to select browser **/
-	public static void initialization()
-	{
-		String browserName = prop.getProperty("browser");
+    //  Properties object to load configuration settings from the config file
+    public static Properties prop;
 
-		switch (browserName) {
-			case "chrome":
-				WebDriverManager.chromedriver().setup();
-				//To handle location popup
-				DesiredCapabilities caps = new DesiredCapabilities();
-				ChromeOptions options = new ChromeOptions();
-				caps.setCapability(CapabilityType.UNEXPECTED_ALERT_BEHAVIOUR, UnexpectedAlertBehaviour.ACCEPT);
-				Map<String, Object> prefs = new HashMap<String, Object>();
-				prefs.put("profile.default_content_setting_values.notifications", 1);
-				prefs.put("profile.default_content_settings.popups", 0);
-				prefs.put("download.default_directory", System.getProperty("user.dir") + "\\Framework_Downloads");
-				prefs.put("safebrowsing.enabled", "true");
-//			options.addArguments("--window-size=1920,1080");
-				options.addArguments("--start-maximized");
-//			options.addArguments("--headless");
-//			options.setExperimentalOption("prefs", prefs);
-				caps.setCapability(ChromeOptions.CAPABILITY, options);
-				driver = new ChromeDriver(options);
+    //  BufferedWriter for writing logs to a file
+    public static BufferedWriter bwcc;
 
-				break;
-			case "firefox":
-				WebDriverManager.firefoxdriver().setup();
-				driver = new FirefoxDriver();
-				break;
-			case "safari":
-				driver = new SafariDriver();
-				break;
-			default:
-				System.out.println("Please pass the correct browser value: " + browserName);
-				break;
-		}
-						
-		e_driver = new EventFiringWebDriver(driver);
-		// Now create object of EventListerHandler to register it with EventFiringWebDriver
-		eventListener = new WebEventListener();
-		e_driver.register(eventListener);
-		driver = e_driver;
-		driver.manage().deleteAllCookies();
-		driver.manage().timeouts().pageLoadTimeout(TestUtil.PAGE_LOAD_TIMEOUT, TimeUnit.SECONDS);
-		driver.manage().timeouts().implicitlyWait(TestUtil.IMPLICIT_WAIT, TimeUnit.SECONDS);
-//		driver= tlDriver.set(e_driver);
-//		return tlDriver.get();
-		driver.get(prop.getProperty("url"));	
-		
-	}
+    /**
+     *  Constructor: Loads the `config.properties` file for configurations
+     */
+    public TestBase() {
+        try {
+            //  Initialize Properties object
+            prop = new Properties();
 
-	/** To write IDE console logs to txt file in logs folder attach in mail **/
-	public static BufferedWriter bwcc;
-	public static void ConsoleLogs(String met_name) throws IOException {
-        System.out.println("================== Console LOGS =======================");
-        String logpath=System.getProperty("user.dir")+"\\logs\\"+"\\Consolelogs_"+met_name+".txt";
-         bwcc = new BufferedWriter(new FileWriter(logpath,true));
-        bwcc.write(WebEventListener.toText);
-        System.out.println("Console logs logged to"+logpath);
-		System.out.println("======================================================");
-		bwcc.close();
-        
+            //  Load configuration file
+            FileInputStream ip = new FileInputStream(System.getProperty("user.dir") + "/src/test/resources/config/config.properties");
+            prop.load(ip);
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle file not found or reading errors
+        }
     }
 
-// To Capture Browser Console Logs to a text file and attach in mail
-	public static void logBrowserConsoleLogs(String met_name) throws IOException {
-        System.out.println("================== BROWSER LOGS =======================");
-        String logpath=System.getProperty("user.dir")+"\\logs\\"+met_name+".txt";
-        BufferedWriter bw = new BufferedWriter(new FileWriter(logpath,true));
+    /**
+     * - Initializes WebDriver based on the browser specified in `config.properties`
+     * - Registers a Custom WebDriver Event Listener for logging
+     * - Configures browser settings and timeouts
+     */
+    public static void initialization() {
+        //  Read the browser name from the properties file
+        String browserName = prop.getProperty("browser").toLowerCase();
+
+        //  Switch-case to handle different browsers
+        switch (browserName) {
+            case "chrome":
+                ChromeOptions chromeOptions = new ChromeOptions();
+
+                //  Configure Chrome browser options
+                chromeOptions.addArguments("--start-maximized"); // Start browser maximized
+                chromeOptions.addArguments("--disable-notifications"); // Disable notifications
+                chromeOptions.addArguments("--disable-popup-blocking"); // Block popups
+
+                //  Set Chrome preferences
+                Map<String, Object> prefs = new HashMap<>();
+                prefs.put("profile.default_content_setting_values.notifications", 1);
+                prefs.put("profile.default_content_settings.popups", 0);
+                prefs.put("download.default_directory", System.getProperty("user.dir") + "\\Framework_Downloads");
+                chromeOptions.setExperimentalOption("prefs", prefs);
+
+        // Set window size (width x height)
+//                options.addArguments("--window-size=800,600"); // Adjust the values as needed
+//                chromeOptions.addArguments("--window-size=1920,1080");
+
+        // Set browser zoom to 80% To Execute scenarios in Laptop resolution
+//                chromeOptions.addArguments("--force-device-scale-factor=0.8");// Adjust the value as needed
+//                chromeOptions.addArguments("--high-dpi-support=0.8");// Adjust the value as needed
+//			      chromeOptions.addArguments("--headless");   //To run the scripts on headless Chrome browser
+
+                //  Initialize ChromeDriver with options
+                driver = new ChromeDriver(chromeOptions);
+                break;
+
+            case "firefox":
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+                // Configure Firefox settings (disable cache)
+                firefoxOptions.addPreference("browser.cache.disk.enable", false);
+                firefoxOptions.addPreference("browser.cache.memory.enable", false);
+                firefoxOptions.addPreference("network.http.use-cache", false);
+
+                driver = new FirefoxDriver(firefoxOptions);
+                break;
+
+            case "safari":
+                //  Initialize SafariDriver and maximize window
+                driver = new SafariDriver();
+                driver.manage().window().maximize();
+                break;
+
+            case "edge":
+                EdgeOptions edgeOptions = new EdgeOptions();
+
+                //  Configure Edge browser options
+                edgeOptions.addArguments("--disable-cache");
+                edgeOptions.addArguments("--disable-extensions");
+                edgeOptions.addArguments("--incognito");
+
+                driver = new EdgeDriver(edgeOptions);
+                break;
+
+            default:
+                throw new RuntimeException("Invalid browser name: " + browserName);
+        }
+
+        //  Register Custom WebDriver Listener for logging browser events
+        CustomWebDriverListener listener = new CustomWebDriverListener();
+        driver = new EventFiringDecorator<>(listener).decorate(driver);
+
+        //  Delete all cookies
+        driver.manage().deleteAllCookies();
+
+        //  Set page load timeout (60 seconds max)
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+
+        //  Set implicit wait timeout (10 seconds for elements to be found)
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        //  Open the application URL specified in `config.properties`
+        driver.get(prop.getProperty("url"));
+    }
+
+    /**
+     *  Waits for an element to be visible on the page
+     * @param locator  - The By locator of the element
+     * @param timeout  - The maximum duration to wait
+     */
+    public static void waitForElement(By locator, Duration timeout) {
+        new WebDriverWait(driver, timeout).until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    public static WebElement waitForElementToBeClickable(By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.ignoring(StaleElementReferenceException.class);
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+    public static WebElement waitForElementToBeVisible(By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.ignoring(StaleElementReferenceException.class);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    public static WebElement waitForElementWithRetry(By locator, Function<By, ExpectedCondition<WebElement>> condition) {
+        int attempts = 0;
+        while (attempts < 3) {
+            try {
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                return wait.until(condition.apply(locator));
+            } catch (StaleElementReferenceException e) {
+                attempts++;
+            }
+        }
+        throw new StaleElementReferenceException("Element still stale after retries: " + locator.toString());
+    }
+    public static void clickWithRetryAfterRefresh(By locator) throws InterruptedException {
+        try {
+            WebElement element = waitForElementWithRetry(locator, ExpectedConditions::elementToBeClickable);
+            element.click();
+        } catch (Exception e) {
+            refreshPageWithF5();
+            Thread.sleep(3000);
+            WebElement element = waitForElementWithRetry(locator, ExpectedConditions::elementToBeClickable);
+            element.click();
+        }
+    }
+    /**
+     * Scrolls down using the Robot class (simulating PAGE_DOWN key)
+     */
+    public static void scrollDown() throws AWTException {
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_PAGE_DOWN);
+        robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+        System.out.println("🔽 Scrolled Down");
+    }
+
+    /**
+     *  Scrolls up using the Robot class (simulating PAGE_UP key)
+     */
+    public static void scrollUp() throws AWTException {
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_PAGE_UP);
+        robot.keyRelease(KeyEvent.VK_PAGE_UP);
+        System.out.println("🔼 Scrolled Up");
+    }
+
+    /**
+     *  Accepts browser alerts if present
+     */
+    public static void acceptAlert() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            alert.accept();
+            System.out.println("✅ Alert accepted.");
+        } catch (Exception e) {
+            System.out.println("⚠️ No alert present.");
+        }
+    }
+    public static void yesAlertHandle() {
+        if (driver.findElement(yesButton).isDisplayed()) {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            WebElement yesButtonElement = wait.until(ExpectedConditions.elementToBeClickable(yesButton));
+            yesButtonElement.click();
+        } else {
+            System.out.println("Alert Not found");
+        }
+    }
+    public static void refreshPageWithF5() {
+        Actions actions = new Actions(driver);
+        actions.sendKeys(Keys.F5).perform(); // Presses F5 to refresh
+        System.out.println("Page refreshed!");
+    }
+    /**
+     *  Captures and saves WebDriver console logs to a file
+     */
+    public static void ConsoleLogs(String met_name) throws IOException {
+        String logPath = System.getProperty("user.dir") + "\\logs\\" + "Consolelogs_" + met_name + ".txt";
+        BufferedWriter bwcc = new BufferedWriter(new FileWriter(logPath, true));
+
+        // Extract and filter logs
+        LogEntries logEntries = driver.manage().logs().get(LogType.DRIVER);
+        for (LogEntry entry : logEntries) {
+            if (entry.getMessage().contains("Exception") || entry.getLevel().equals(Level.SEVERE)) {
+                bwcc.write(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage() + System.lineSeparator());
+            }
+        }
+
+        bwcc.close();
+        System.out.println("Filtered console logs logged to: " + logPath);
+    }
+
+    /**
+     *  Captures browser console logs (JavaScript errors) and saves to a file
+     */
+    public static void logBrowserConsoleLogs(String met_name) throws IOException {
+        String logPath = System.getProperty("user.dir") + "\\logs\\" + met_name + "_BrowserLogs.txt";
+        BufferedWriter bw = new BufferedWriter(new FileWriter(logPath, true));
+
         LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
         for (LogEntry entry : logEntries) {
-            bw.write(met_name+" ----> "+new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage()+ System.lineSeparator());
-            System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+            if (entry.getLevel().equals(Level.SEVERE)) {  // Only capture severe errors
+                bw.write(met_name + " --> " + new Date(entry.getTimestamp()) + " " + entry.getMessage() + System.lineSeparator());
+            }
         }
+
         bw.close();
-        System.out.println("Browser logs added in"+logpath);
-        System.out.println("=======================================================");
+        System.out.println("Filtered browser logs logged to: " + logPath);
     }
-	
-//	After the execution the browser close method is this one
-	public void closeBrowser() throws InterruptedException {
-		Thread.sleep(5000);
-		driver.quit();
-	}
-	
-	
+
+    /**
+     *  Closes the browser and quits WebDriver session
+     */
+    public void closeBrowser() {
+        try {
+            Thread.sleep(5000); // Wait before closing (optional)
+            driver.quit();
+            System.out.println("✅ Browser closed successfully.");
+        } catch (InterruptedException e) {
+            System.err.println("⚠️ Error closing browser: " + e.getMessage());
+        }
+    }
 }
+
