@@ -25,7 +25,13 @@ jobs:
         run: |
           REPORT_DATE=$(date +'%Y-%m-%d')
           mkdir -p reports/$REPORT_DATE
-          cp -r target/generated-report/* reports/$REPORT_DATE/
+          if [ -d target/generated-report ]; then
+            cp -r target/generated-report/* reports/$REPORT_DATE/
+          elif [ -d target/cucumber-html-reports ]; then
+            cp -r target/cucumber-html-reports/* reports/$REPORT_DATE/
+          else
+            echo "No report directory found!" && exit 1
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
